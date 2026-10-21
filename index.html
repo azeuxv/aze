@@ -1,0 +1,607 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>새벽 1시 21분</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one phone glowing in a dark room, scaled to fit the viewport; quiet controls beneath it. The phone UI is drawn entirely in CSS and SVG. */
+:root{
+  color-scheme:dark;
+  --night:#0b0f16; --night-2:#151b26; --ink:#e6eaf2; --muted:#8c95a8; --line:#283142; --glow:rgba(120,150,220,.20);
+  --sky:#b2c7d9; --yellow:#fee500; --one:#f2c300; --bubble-ink:#1a1a1a;
+  --ios-ink:#111114; --field:#f1f2f4; --kb:#d2d5dc; --key:#ffffff; --key-fn:#abb0ba;
+  --accept:#34c759; --decline:#ff3b30;
+  --font-ui:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:radial-gradient(ellipse 70% 50% at 50% 38%,#172033 0%,var(--night) 70%),var(--night);
+  color:var(--ink);font-family:var(--font-ui);
+  min-height:100%;display:flex;flex-direction:column;align-items:center;gap:14px;
+  padding-block:16px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.stage{width:calc(390px*var(--s,1));height:calc(844px*var(--s,1));margin:12px;flex:none}
+.stage.buzz{animation:buzz .9s linear 1}
+@keyframes buzz{
+  0%,60%,100%{transform:translate(0,0) rotate(0)}
+  8%{transform:translate(-3px,1px) rotate(-.4deg)}16%{transform:translate(3px,-1px) rotate(.4deg)}
+  24%{transform:translate(-3px,-1px) rotate(-.3deg)}32%{transform:translate(3px,1px) rotate(.3deg)}
+  40%{transform:translate(-2px,1px) rotate(-.3deg)}48%{transform:translate(2px,-1px) rotate(.3deg)}
+}
+.phone{
+  width:390px;height:844px;position:relative;border-radius:56px;background:#000;
+  transform:scale(var(--s,1));transform-origin:0 0;
+  box-shadow:0 0 0 9px #0a0b0e,0 0 0 11px #3b4150,0 40px 90px rgba(0,0,0,.65),0 0 140px var(--glow);
+}
+.screen{position:absolute;inset:0;border-radius:56px;overflow:hidden;background:#000;color:var(--ios-ink);user-select:none;-webkit-user-select:none}
+
+/* status bar and home indicator */
+.statusbar{position:absolute;inset:0 0 auto 0;height:54px;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:8px 34px 0 46px;font-weight:600;font-size:17px;color:#fff;transition:color .3s;pointer-events:none}
+.screen[data-sb="dark"] .statusbar{color:#111}
+.clock{font-variant-numeric:tabular-nums;min-width:44px}
+.island{position:absolute;left:50%;top:11px;width:122px;height:35px;margin-left:-61px;border-radius:20px;background:#000}
+.sys{display:flex;gap:6px;align-items:center}
+.sys svg{display:block;fill:currentColor}
+.homebar{position:absolute;bottom:8px;left:50%;width:140px;height:5px;margin-left:-70px;border-radius:3px;background:#fff;z-index:40;pointer-events:none;transition:background .3s}
+.screen[data-sb="dark"] .homebar{background:#111}
+
+/* home screen */
+.home{position:absolute;inset:0;z-index:1;background:linear-gradient(165deg,#3b3f93 0%,#222660 42%,#0f1233 100%);transition:transform .45s,filter .45s}
+.home::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 18%,rgba(255,170,200,.32),transparent 42%),radial-gradient(circle at 15% 72%,rgba(90,160,255,.26),transparent 46%)}
+.home.away{transform:scale(.92);filter:brightness(.6)}
+.grid{position:absolute;left:0;right:0;top:92px;padding:0 20px;display:grid;grid-template-columns:repeat(4,1fr);row-gap:26px;justify-items:center}
+.app{display:flex;flex-direction:column;align-items:center;gap:6px;width:72px;color:#fff;font-size:11.5px;text-shadow:0 1px 3px rgba(0,0,0,.45);transition:transform .12s}
+.app.press{transform:scale(.9)}
+.ico{width:60px;height:60px;border-radius:14px;overflow:hidden;display:block}
+.ico svg{display:block;width:100%;height:100%}
+.dock{position:absolute;left:12px;right:12px;bottom:22px;height:94px;border-radius:34px;background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);display:flex;justify-content:space-around;align-items:center;padding:0 10px}
+
+/* chat room */
+.chat{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;background:var(--sky);padding:54px 0 34px;opacity:0;pointer-events:none;transform:scale(.16);transform-origin:var(--ox,50%) var(--oy,50%);border-radius:56px;transition:transform .5s cubic-bezier(.2,.85,.25,1),opacity .3s,padding-bottom .38s cubic-bezier(.2,.8,.2,1)}
+.chat.on{opacity:1;transform:none}
+.chat.kb-on{padding-bottom:292px}
+.navbar{height:50px;flex:none;display:flex;align-items:center;gap:4px;padding:0 16px 0 8px}
+.navbar h1{margin:0;flex:1;font-size:18px;font-weight:700;color:#1b1b1b;letter-spacing:-.3px}
+.navbar svg{display:block;stroke:#1b1b1b;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.navbar .r{display:flex;gap:18px;align-items:center}
+.msgs{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:7px;padding:0 12px 12px;overflow:hidden}
+.datechip{align-self:center;margin:14px 0 auto;background:rgba(0,0,0,.18);color:#fff;font-size:12px;padding:6px 14px;border-radius:14px}
+.row{display:flex;justify-content:flex-end;align-items:flex-end;gap:6px;transform-origin:100% 100%;animation:pop .22s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.94)}}
+.meta{display:flex;flex-direction:column;align-items:flex-end;font-size:11px;line-height:1.25;color:#5f6b76;white-space:nowrap}
+.one{color:var(--one);font-weight:700;text-shadow:0 0 1px rgba(0,0,0,.3)}
+.bubble{max-width:74%;background:var(--yellow);color:var(--bubble-ink);font-size:15.5px;line-height:1.4;padding:8px 11px;border-radius:14px;word-break:keep-all;overflow-wrap:anywhere}
+.inputbar{flex:none;background:#fff;display:flex;align-items:center;gap:8px;padding:8px 10px}
+.plus{width:34px;height:34px;display:grid;place-items:center;color:#9aa0a8}
+.field{flex:1;min-width:0;min-height:38px;background:var(--field);border-radius:19px;display:flex;align-items:center;padding:0 14px;font-size:16px;overflow:hidden;white-space:pre}
+.caret{display:inline-block;flex:none;width:2px;height:20px;background:#111;margin-left:1px;animation:blink 1s steps(1) infinite}
+.chat:not(.kb-on) .caret{display:none}
+@keyframes blink{50%{opacity:0}}
+.send{width:36px;height:36px;border-radius:50%;background:#e6e8ec;display:grid;place-items:center;transition:background .15s,transform .12s}
+.send svg{display:block;stroke:#a0a6ae;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.has-text .send{background:var(--yellow)}
+.has-text .send svg{stroke:#1a1a1a}
+.send.press{transform:scale(.9)}
+
+/* keyboard (two-set Hangul layout) */
+.kb{position:absolute;left:0;right:0;bottom:0;height:292px;background:var(--kb);transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.8,.2,1);padding:9px 3px 0;z-index:3}
+.chat.kb-on .kb{transform:none}
+.krow{display:flex;gap:6px;margin-bottom:12px;justify-content:center}
+.krow.r2{padding:0 17px}
+.key{position:relative;flex:1;min-width:0;height:42px;border-radius:5px;background:var(--key);box-shadow:0 1px 0 #8b8d92;display:grid;place-items:center;font-size:22px;color:#111;transition:background .06s}
+.key.fn{background:var(--key-fn);font-size:15px}
+.key.fn.down{background:var(--key)}
+.key.down{background:#c6cad2}
+.key.w13{flex:1.35}.key.w16{flex:1.6}.key.w4{flex:4.6;background:var(--key);font-size:15px}
+.pop{position:absolute;left:50%;bottom:calc(100% - 4px);width:56px;height:64px;margin-left:-28px;background:var(--key);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.35);display:none;place-items:center;font-size:32px;font-style:normal;z-index:5;color:#111}
+.key.down .pop{display:grid}
+.kbtm{display:flex;justify-content:space-between;padding:4px 24px 0;color:#2a2c31}
+.kbtm svg{display:block;stroke:#2a2c31;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* incoming call */
+.banner{position:absolute;left:8px;right:8px;top:58px;z-index:6;height:84px;border-radius:30px;background:rgba(28,28,30,.96);color:#fff;display:flex;align-items:center;gap:12px;padding:0 16px 0 14px;transform:translateY(-170%);transition:transform .55s cubic-bezier(.2,1.2,.3,1);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.banner.on{transform:none}
+.avatar{width:50px;height:50px;border-radius:50%;overflow:hidden;flex:none}
+.avatar svg{display:block}
+.who{flex:1;min-width:0}
+.who b{display:block;font-size:19px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who span{font-size:14px;color:#a8a8ad}
+.cbtn{width:48px;height:48px;border-radius:50%;border:0;display:grid;place-items:center;color:#fff;cursor:pointer;flex:none;padding:0}
+.cbtn svg{display:block;fill:#fff}
+.cbtn.no{background:var(--decline)}.cbtn.no svg{transform:rotate(135deg)}
+.cbtn.yes{background:var(--accept)}
+.call{position:absolute;inset:0;z-index:8;background:linear-gradient(180deg,#4b5063,#1d2029 55%,#0c0d11);color:#fff;display:flex;flex-direction:column;align-items:center;padding:118px 24px 56px;opacity:0;pointer-events:none;transition:opacity .35s}
+.call.on{opacity:1;pointer-events:auto}
+.call h2{margin:0;font-size:34px;font-weight:500}
+.call .t{margin-top:8px;font-size:18px;opacity:.75;font-variant-numeric:tabular-nums}
+.cgrid{margin-top:auto;display:grid;grid-template-columns:repeat(3,76px);gap:22px 34px;justify-content:center}
+.cg{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px}
+.cg span{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.16)}
+.end{width:72px;height:72px;margin-top:34px}
+
+/* overlays */
+.curtain{position:absolute;inset:0;z-index:30;background:#000;opacity:0;pointer-events:none;transition:opacity .5s;display:grid;place-items:center;color:#fff;font-size:15px;letter-spacing:.14em}
+.curtain.on{opacity:1}
+.start{position:absolute;inset:0;z-index:60;border:0;background:rgba(7,9,14,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;cursor:pointer;transition:opacity .4s}
+.start.gone{opacity:0;pointer-events:none}
+.play{width:78px;height:78px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.start small{font-size:15px;letter-spacing:.1em;opacity:.85}
+.touch{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;z-index:45;pointer-events:none;background:rgba(40,46,64,.26);border:2px solid rgba(255,255,255,.75);opacity:0;transform:translate(var(--tx,170px),var(--ty,770px)) scale(var(--sc,1));transition:transform .5s cubic-bezier(.3,.7,.2,1),opacity .2s}
+.touch.show{opacity:1}
+.touch.press{--sc:.76}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{font:inherit;font-size:14px;color:var(--ink);background:var(--night-2);border:1px solid var(--line);border-radius:999px;padding:0 18px;height:42px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:#3d4a63}
+.btn:focus-visible,.start:focus-visible,.cbtn:focus-visible{outline:3px solid #8fb0ff;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){
+  .stage.buzz{animation:none}
+  .banner,.chat,.kb,.home{transition-duration:.01s}
+  .row{animation:none}
+}
+</style>
+<h1 class="sr">새벽 1시 21분</h1>
+
+<div class="stage" id="stage">
+  <div class="phone" id="phone">
+    <div class="screen" id="screen" data-sb="light">
+
+      <div class="statusbar">
+        <span class="clock" id="clock">1:21</span>
+        <span class="island"></span>
+        <span class="sys">
+          <svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12" aria-hidden="true"><path d="M8.5 11.2 6.3 8.8a3.2 3.2 0 0 1 4.4 0zM3.6 6.4a6.8 6.8 0 0 1 9.8 0l-1.3 1.4a4.9 4.9 0 0 0-7.2 0zM1 3.8a10.5 10.5 0 0 1 15 0l-1.3 1.4a8.7 8.7 0 0 0-12.4 0z"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13" aria-hidden="true"><rect x=".5" y=".5" width="23" height="12" rx="3.8" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="14" height="9" rx="2.5"/><path d="M25 4.5v4c.8-.3 1.5-1.2 1.5-2s-.7-1.7-1.5-2z" opacity=".5"/></svg>
+        </span>
+      </div>
+
+      <section class="home" id="home" aria-label="홈 화면">
+        <div class="grid" id="grid"></div>
+        <div class="dock" id="dock"></div>
+      </section>
+
+      <section class="chat" id="chat" aria-label="채팅방">
+        <header class="navbar">
+          <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><path d="M17 6 9 14l8 8"/></svg>
+          <h1 id="who">긴토키</h1>
+          <div class="r">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </div>
+        </header>
+        <div class="msgs" id="msgs"><div class="datechip" id="datechip"></div></div>
+        <div class="inputbar" id="inputbar">
+          <span class="plus"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+          <div class="field" id="field"><span id="typed"></span><i class="caret"></i></div>
+          <span class="send" id="send"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16V4M4.5 9.5 10 4l5.500 5.500"/></svg></span>
+        </div>
+        <div class="kb" id="kb"></div>
+      </section>
+
+      <div class="banner" id="banner" role="alert">
+        <span class="avatar"><svg width="50" height="50" viewBox="0 0 50 50" aria-hidden="true"><rect width="50" height="50" fill="#9a9ea8"/><circle cx="25" cy="20" r="8.500" fill="#e9eaee"/><path d="M8 50c1-11 8-17 17-17s16 6 17 17z" fill="#e9eaee"/></svg></span>
+        <div class="who"><b id="callwho">긴토키</b><span>모바일</span></div>
+        <button class="cbtn no" id="decline" type="button" aria-label="거절"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
+        <button class="cbtn yes" id="accept" type="button" aria-label="수락"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
+      </div>
+
+      <section class="call" id="call" aria-label="통화 화면">
+        <h2 id="callname">긴토키</h2>
+        <div class="t" id="ctime">00:00</div>
+        <div class="cgrid">
+          <div class="cg"><span></span>음소거</div><div class="cg"><span></span>키패드</div><div class="cg"><span></span>오디오</div>
+          <div class="cg"><span></span>통화 추가</div><div class="cg"><span></span>영상 통화</div><div class="cg"><span></span>연락처</div>
+        </div>
+        <button class="cbtn no end" id="endcall" type="button" aria-label="통화 종료"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
+      </section>
+
+      <div class="curtain" id="curtain"><span id="curtext"></span></div>
+      <button class="start" id="start" type="button" aria-label="재생">
+        <span class="play"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M10 6.500v17l14-8.500z" fill="#111"/></svg></span>
+        <small id="startlabel">새벽 1시 21분</small>
+      </button>
+      <div class="touch" id="touch"></div>
+      <div class="homebar"></div>
+
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" id="replay" type="button">처음부터 다시</button>
+  <button class="btn" id="snd" type="button" aria-pressed="true"><span id="sndt">소리 켬</span></button>
+</div>
+<script>
+(() => {
+'use strict';
+
+/* ---- Edit these to change the scene ---- */
+const CONFIG = {
+  contact: '긴토키',
+  dateLabel: '2026년 10월 21일 수요일',
+  clock1: '1:21',            // status bar time at the start
+  clock2: '1:24',            // status bar time after the jump
+  time1: '오전 1:21',        // time shown next to the first messages
+  time2: '오전 1:24',        // time shown next to the slipped message
+  firstMessages: ['긴토키', '자는가?'],
+  jumpLabel: '3분 뒤',
+  draft: '보고 싶네',        // typed, then hesitated over
+  sent: '보고 싶',           // what is left when it is sent by mistake
+  hesitateMs: 7000,          // time between finishing the draft and the first backspace
+  ringDelayMs: 2000          // time between sending and the incoming call
+};
+
+//#composer-start
+const CHO = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+const JUNG = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ';
+const JONG = ['', 'ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const SPLIT_V = { 'ㅘ':['ㅗ','ㅏ'], 'ㅙ':['ㅗ','ㅐ'], 'ㅚ':['ㅗ','ㅣ'], 'ㅝ':['ㅜ','ㅓ'], 'ㅞ':['ㅜ','ㅔ'], 'ㅟ':['ㅜ','ㅣ'], 'ㅢ':['ㅡ','ㅣ'] };
+const SPLIT_F = { 'ㄳ':['ㄱ','ㅅ'], 'ㄵ':['ㄴ','ㅈ'], 'ㄶ':['ㄴ','ㅎ'], 'ㄺ':['ㄹ','ㄱ'], 'ㄻ':['ㄹ','ㅁ'], 'ㄼ':['ㄹ','ㅂ'], 'ㄽ':['ㄹ','ㅅ'], 'ㄾ':['ㄹ','ㅌ'], 'ㄿ':['ㄹ','ㅍ'], 'ㅀ':['ㄹ','ㅎ'], 'ㅄ':['ㅂ','ㅅ'] };
+const mk = (c, v, f) => String.fromCharCode(0xAC00 + (c * 21 + v) * 28 + f);
+
+/* Turns a string into the key presses a two-set Hangul keyboard needs, with the text shown after each press. */
+function keystrokes(text) {
+  const out = [];
+  let done = '';
+  for (const ch of text) {
+    const code = ch.charCodeAt(0) - 0xAC00;
+    if (code < 0 || code > 11171) {
+      out.push({ key: ch === ' ' ? 'space' : ch, text: done + ch });
+      done += ch;
+      continue;
+    }
+    const c = Math.floor(code / 588), v = Math.floor((code % 588) / 28), f = code % 28;
+    out.push({ key: CHO[c], text: done + CHO[c] });
+    const vj = JUNG[v];
+    if (SPLIT_V[vj]) {
+      const [a, b] = SPLIT_V[vj];
+      out.push({ key: a, text: done + mk(c, JUNG.indexOf(a), 0) });
+      out.push({ key: b, text: done + mk(c, v, 0) });
+    } else {
+      out.push({ key: vj, text: done + mk(c, v, 0) });
+    }
+    if (f) {
+      const fj = JONG[f];
+      if (SPLIT_F[fj]) {
+        const [a, b] = SPLIT_F[fj];
+        out.push({ key: a, text: done + mk(c, v, JONG.indexOf(a)) });
+        out.push({ key: b, text: done + mk(c, v, f) });
+      } else {
+        out.push({ key: fj, text: done + mk(c, v, f) });
+      }
+    }
+    done += mk(c, v, f);
+  }
+  return out;
+}
+//#composer-end
+
+const $ = (id) => document.getElementById(id);
+const stage = $('stage'), screen = $('screen'), home = $('home'), chat = $('chat'), msgs = $('msgs'),
+  typedEl = $('typed'), inputbar = $('inputbar'), sendBtn = $('send'), field = $('field'), kb = $('kb'),
+  banner = $('banner'), callEl = $('call'), curtain = $('curtain'), touch = $('touch'), startBtn = $('start');
+
+/* ---- scale the phone to the viewport ---- */
+function fit() {
+  const s = Math.min(1, (innerWidth - 56) / 390, Math.max(0.62, (innerHeight - 100) / 868));
+  stage.style.setProperty('--s', s.toFixed(4));
+}
+addEventListener('resize', fit);
+fit();
+
+/* ---- cancellable timing ---- */
+const CANCEL = Symbol('cancel');
+let runId = 0;
+const wait = (ms) => {
+  const id = runId;
+  return new Promise((res, rej) => setTimeout(() => (id === runId ? res() : rej(CANCEL)), ms));
+};
+const waitUntil = (t) => wait(Math.max(0, t - performance.now()));
+const jit = (ms) => ms * (0.78 + Math.random() * 0.5);
+
+/* ---- sound (WebAudio, only after the first tap) ---- */
+let ac = null, soundOn = true;
+function ensureAudio() {
+  try {
+    if (!ac) { const C = window.AudioContext || window.webkitAudioContext; if (C) ac = new C(); }
+    if (ac && ac.state === 'suspended') ac.resume();
+  } catch (e) {}
+}
+function tone(f, d, type, g, at) {
+  if (!soundOn || !ac) return;
+  try {
+    const t = ac.currentTime + (at || 0), o = ac.createOscillator(), n = ac.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(f, t);
+    n.gain.setValueAtTime(g || 0.05, t);
+    n.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(n); n.connect(ac.destination);
+    o.start(t); o.stop(t + d + 0.02);
+  } catch (e) {}
+}
+const sfx = {
+  key: () => tone(1500, 0.03, 'square', 0.012),
+  del: () => tone(900, 0.04, 'square', 0.012),
+  send: () => { tone(660, 0.09, 'sine', 0.06); tone(990, 0.12, 'sine', 0.05, 0.07); },
+  ring: () => [880, 988, 1175, 988, 880, 0, 880, 988, 1175, 988, 880].forEach((f, i) => f && tone(f, 0.15, 'triangle', 0.07, i * 0.13))
+};
+
+/* ---- icons ---- */
+const PHONE_PATH = 'M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z';
+const ICONS = [
+  ['시계', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#111"/><circle cx="30" cy="30" r="21" fill="#fff"/><path d="M30 17v14l9 5" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"/></svg>'],
+  ['날씨', '<svg viewBox="0 0 60 60"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f8ee8"/><stop offset="1" stop-color="#8fc4f5"/></linearGradient></defs><rect width="60" height="60" fill="url(#gw)"/><circle cx="22" cy="22" r="9" fill="#ffd54a"/><ellipse cx="34" cy="39" rx="15" ry="9" fill="#fff"/><circle cx="26" cy="34" r="8" fill="#fff"/></svg>'],
+  ['메모', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#fffdf4"/><rect width="60" height="16" fill="#f7c948"/><path d="M12 28h36M12 37h36M12 46h24" stroke="#d8d4c4" stroke-width="2.5" stroke-linecap="round"/></svg>'],
+  ['사진', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#fff"/><g opacity=".85"><circle cx="30" cy="20" r="9" fill="#ff9f0a"/><circle cx="40" cy="30" r="9" fill="#34c759"/><circle cx="30" cy="40" r="9" fill="#0a84ff"/><circle cx="20" cy="30" r="9" fill="#ff375f"/></g></svg>'],
+  ['카메라', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#b9bcc4"/><rect x="9" y="18" width="42" height="28" rx="6" fill="#2a2c31"/><circle cx="30" cy="32" r="9" fill="#9aa0ad"/><circle cx="30" cy="32" r="5" fill="#2a2c31"/><rect x="38" y="13" width="9" height="6" rx="2" fill="#2a2c31"/></svg>'],
+  ['지도', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#dff0d0"/><path d="M-4 44 64 18" stroke="#fff" stroke-width="7"/><path d="M20 -4 36 64" stroke="#f3dc7c" stroke-width="5"/><circle cx="31" cy="27" r="8" fill="#ff453a"/><circle cx="31" cy="27" r="3" fill="#fff"/></svg>'],
+  ['카톡', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#fee500"/><path d="M30 14c-11 0-19 7-19 16 0 6 4 11 10 14l-2 8 9-6c.7.1 1.3.1 2 .1 11 0 19-7 19-16s-8-16-19-16z" fill="#2b1d1b"/><circle cx="22.500" cy="30" r="2.400" fill="#fee500"/><circle cx="30" cy="30" r="2.400" fill="#fee500"/><circle cx="37.500" cy="30" r="2.400" fill="#fee500"/></svg>'],
+  ['설정', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#8e9199"/><circle cx="30" cy="30" r="15" fill="none" stroke="#3a3c42" stroke-width="9" stroke-dasharray="5.9 5.9"/><circle cx="30" cy="30" r="12" fill="#3a3c42"/><circle cx="30" cy="30" r="5" fill="#8e9199"/></svg>'],
+  ['음악', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#fa4666"/><path d="M26 41V20l16-4v21" stroke="#fff" stroke-width="3.500" fill="none" stroke-linejoin="round"/><circle cx="21" cy="42" r="5.500" fill="#fff"/><circle cx="37" cy="38" r="5.500" fill="#fff"/></svg>'],
+  ['지갑', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#111"/><rect x="9" y="17" width="42" height="10" rx="4" fill="#ff9f0a"/><rect x="9" y="23" width="42" height="10" rx="4" fill="#34c759"/><rect x="9" y="29" width="42" height="10" rx="4" fill="#0a84ff"/><rect x="7" y="35" width="46" height="14" rx="5" fill="#2c2c2e"/></svg>'],
+  ['계산기', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#2a2a2c"/><rect x="10" y="10" width="40" height="12" rx="3" fill="#545458"/><g fill="#ff9f0a"><circle cx="16" cy="32" r="4.500"/><circle cx="30" cy="32" r="4.500"/><circle cx="44" cy="32" r="4.500"/></g><g fill="#636366"><circle cx="16" cy="45" r="4.500"/><circle cx="30" cy="45" r="4.500"/><circle cx="44" cy="45" r="4.500"/></g></svg>'],
+  ['파일', '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#2d8cf0"/><path d="M12 22c0-2 1.500-3.500 3.500-3.500H26l4 5h14.500c2 0 3.500 1.500 3.500 3.500V42c0 2-1.500 3.500-3.500 3.500h-29C13.500 45.500 12 44 12 42z" fill="#fff"/></svg>']
+];
+const DOCK = [
+  '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#34c759"/><g transform="translate(12 12) scale(1.5)"><path fill="#fff" d="' + PHONE_PATH + '"/></g></svg>',
+  '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#0a84ff"/><circle cx="30" cy="30" r="18" fill="none" stroke="#fff" stroke-width="3"/><path d="M38 22 33 33 22 38 27 27z" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#30d158"/><ellipse cx="30" cy="28" rx="18" ry="14" fill="#fff"/><path d="M16 42c1-1 2-3 2-6l9 2z" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#2b8cff"/><rect x="11" y="17" width="38" height="26" rx="4" fill="#fff"/><path d="m13 20 17 12 17-12" fill="none" stroke="#2b8cff" stroke-width="2.500"/></svg>'
+];
+const grid = $('grid');
+ICONS.forEach(([name, svg]) => {
+  const a = document.createElement('div');
+  a.className = 'app';
+  a.innerHTML = '<span class="ico">' + svg + '</span><span>' + name + '</span>';
+  grid.append(a);
+});
+DOCK.forEach((svg) => {
+  const a = document.createElement('div');
+  a.className = 'app';
+  a.innerHTML = '<span class="ico">' + svg + '</span>';
+  $('dock').append(a);
+});
+const kakaoIcon = grid.children[6];
+
+/* ---- keyboard ---- */
+const keys = {};
+function keyEl(label, cls, name) {
+  const k = document.createElement('div');
+  k.className = 'key ' + (cls || '');
+  k.append(document.createTextNode(name || label));
+  if (!cls || cls.indexOf('fn') < 0) {
+    const p = document.createElement('i');
+    p.className = 'pop';
+    p.textContent = label;
+    k.append(p);
+  }
+  keys[label] = k;
+  return k;
+}
+function krow(cls, els) {
+  const r = document.createElement('div');
+  r.className = 'krow ' + cls;
+  els.forEach((e) => r.append(e));
+  kb.append(r);
+}
+krow('r1', [...'ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ'].map((c) => keyEl(c)));
+krow('r2', [...'ㅁㄴㅇㄹㅎㅗㅓㅏㅣ'].map((c) => keyEl(c)));
+krow('r3', [keyEl('⇧', 'fn w13')].concat([...'ㅋㅌㅊㅍㅠㅜㅡ'].map((c) => keyEl(c)), [keyEl('⌫', 'fn w13')]));
+krow('r4', [keyEl('123', 'fn w16'), keyEl('space', 'fn w4', '스페이스'), keyEl('return', 'fn w16', '줄바꿈')]);
+const btm = document.createElement('div');
+btm.className = 'kbtm';
+btm.innerHTML = '<svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="9"/><path d="M4 13h18M13 4c-4 4-4 14 0 18M13 4c4 4 4 14 0 18"/></svg><svg width="26" height="26" viewBox="0 0 26 26"><rect x="9.500" y="3" width="7" height="13" rx="3.500"/><path d="M6 12.500a7 7 0 0 0 14 0M13 19.500V23"/></svg>';
+kb.append(btm);
+
+/* ---- helpers ---- */
+const setClock = (t) => { $('clock').textContent = t; };
+const setSB = (m) => { screen.dataset.sb = m; };
+function setTyped(t) {
+  typedEl.textContent = t;
+  inputbar.classList.toggle('has-text', t.length > 0);
+}
+function press(k) {
+  const el = keys[k];
+  if (!el) return;
+  el.classList.add('down');
+  setTimeout(() => el.classList.remove('down'), 120);
+}
+async function typeText(text, delay, noTail) {
+  const ks = keystrokes(text);
+  for (let i = 0; i < ks.length; i++) {
+    press(ks[i].key);
+    sfx.key();
+    setTyped(ks[i].text);
+    if (!(noTail && i === ks.length - 1)) await wait(jit(delay));
+  }
+  return ks;
+}
+let lastRow = null;
+function addSent(text, time) {
+  if (lastRow && lastRow.dataset.time === time) lastRow.querySelector('.time').hidden = true;
+  const r = document.createElement('div');
+  r.className = 'row';
+  r.dataset.time = time;
+  r.innerHTML = '<div class="meta"><span class="one">1</span><span class="time"></span></div><div class="bubble"></div>';
+  r.querySelector('.time').textContent = time;
+  r.querySelector('.bubble').textContent = text;
+  msgs.append(r);
+  lastRow = r;
+}
+
+/* ---- finger dot ---- */
+let dotTimer = null;
+function pt(el, dx, dy) {
+  const sr = screen.getBoundingClientRect(), r = el.getBoundingClientRect(), k = sr.width / 390;
+  return { x: (r.left + r.width / 2 - sr.left) / k + (dx || 0), y: (r.top + r.height / 2 - sr.top) / k + (dy || 0) };
+}
+async function moveDot(el, dx, dy, ms) {
+  const p = pt(el, dx, dy);
+  clearTimeout(dotTimer);
+  touch.style.transitionDuration = ms + 'ms';
+  touch.classList.add('show');
+  touch.style.setProperty('--tx', (p.x - 23) + 'px');
+  touch.style.setProperty('--ty', (p.y - 23) + 'px');
+  await wait(ms);
+}
+const go = (el, dx, dy, ms) => moveDot(el, dx, dy, ms).catch(() => {});
+async function tap(el) {
+  await moveDot(el, 0, 0, 520);
+  touch.classList.add('press');
+  el.classList.add('press');
+  await wait(130);
+  touch.classList.remove('press');
+  el.classList.remove('press');
+  dotTimer = setTimeout(() => touch.classList.remove('show'), 260);
+  await wait(120);
+}
+async function sendMsg(text, time) {
+  await tap(sendBtn);
+  sfx.send();
+  addSent(text, time);
+  setTyped('');
+}
+async function curtainText(txt, mid) {
+  $('curtext').textContent = txt;
+  curtain.classList.add('on');
+  await wait(650);
+  if (mid) mid();
+  await wait(1100);
+  curtain.classList.remove('on');
+  await wait(650);
+}
+async function hesitate(total) {
+  const t0 = performance.now();
+  const marks = [[700, -34, -80, 700], [2000, 0, -10, 650], [3100, -30, -92, 600], [4400, 0, -8, 650], [5400, -14, -88, 600]];
+  for (const [at, dx, dy, ms] of marks) {
+    await waitUntil(t0 + at);
+    go(sendBtn, dx, dy, ms);
+  }
+  await waitUntil(t0 + 6200);
+  go(sendBtn, 0, 0, 500);
+  await waitUntil(t0 + total);
+}
+
+/* ---- incoming call ---- */
+let ringTimer = null, callTimer = null;
+function buzz() {
+  stage.classList.remove('buzz');
+  void stage.offsetWidth;
+  stage.classList.add('buzz');
+}
+function startRing() {
+  banner.classList.add('on');
+  buzz(); sfx.ring();
+  ringTimer = setInterval(() => { buzz(); sfx.ring(); }, 2400);
+}
+function stopRing() {
+  clearInterval(ringTimer);
+  stage.classList.remove('buzz');
+}
+$('decline').onclick = () => { stopRing(); banner.classList.remove('on'); };
+$('accept').onclick = () => {
+  stopRing();
+  banner.classList.remove('on');
+  clearInterval(callTimer);
+  let sec = 0;
+  $('ctime').textContent = '00:00';
+  callEl.classList.add('on');
+  setSB('light');
+  callTimer = setInterval(() => {
+    sec++;
+    $('ctime').textContent = String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+  }, 1000);
+};
+$('endcall').onclick = () => {
+  clearInterval(callTimer);
+  callEl.classList.remove('on');
+  setSB('dark');
+};
+
+/* ---- scene ---- */
+function reset() {
+  stopRing();
+  clearInterval(callTimer);
+  banner.classList.remove('on');
+  callEl.classList.remove('on');
+  curtain.classList.remove('on');
+  chat.classList.remove('on', 'kb-on');
+  home.classList.remove('away');
+  touch.classList.remove('show', 'press');
+  touch.style.transitionDuration = '0ms';
+  touch.style.setProperty('--tx', '170px');
+  touch.style.setProperty('--ty', '770px');
+  setSB('light');
+  setClock(CONFIG.clock1);
+  msgs.querySelectorAll('.row').forEach((n) => n.remove());
+  lastRow = null;
+  setTyped('');
+}
+
+async function run() {
+  const id = ++runId;
+  try {
+    ensureAudio();
+    startBtn.classList.add('gone');
+    reset();
+    await wait(1000);
+
+    await tap(kakaoIcon);
+    const p = pt(kakaoIcon);
+    chat.style.setProperty('--ox', p.x + 'px');
+    chat.style.setProperty('--oy', p.y + 'px');
+    chat.classList.add('on');
+    home.classList.add('away');
+    setTimeout(() => { if (id === runId) setSB('dark'); }, 240);
+    await wait(950);
+
+    await tap(field);
+    chat.classList.add('kb-on');
+    await wait(700);
+
+    for (const m of CONFIG.firstMessages) {
+      await typeText(m, 240);
+      await wait(520);
+      await sendMsg(m, CONFIG.time1);
+      await wait(1100);
+    }
+    await wait(1800);
+
+    await curtainText(CONFIG.jumpLabel, () => setClock(CONFIG.clock2));
+    await wait(700);
+
+    const ks = await typeText(CONFIG.draft, 270, true);
+    await hesitate(CONFIG.hesitateMs);
+
+    await sendMsg(CONFIG.draft, CONFIG.time2);
+
+    await wait(CONFIG.ringDelayMs);
+    startRing();
+  } catch (e) {
+    if (e !== CANCEL) throw e;
+  }
+}
+
+/* ---- wiring ---- */
+$('datechip').textContent = CONFIG.dateLabel;
+$('who').textContent = CONFIG.contact;
+$('callwho').textContent = CONFIG.contact;
+$('callname').textContent = CONFIG.contact;
+setClock(CONFIG.clock1);
+startBtn.addEventListener('click', run);
+$('replay').addEventListener('click', run);
+$('snd').addEventListener('click', () => {
+  soundOn = !soundOn;
+  $('snd').setAttribute('aria-pressed', String(soundOn));
+  $('sndt').textContent = soundOn ? '소리 켬' : '소리 끔';
+  if (soundOn) ensureAudio();
+});
+})();
+</script>
+
+</body></html>
