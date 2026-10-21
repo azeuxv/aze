@@ -228,7 +228,7 @@ const CONFIG = {
   clock2: '1:24',            // status bar time after the jump
   time1: '오전 1:21',        // time shown next to the first messages
   time2: '오전 1:24',        // time shown next to the slipped message
-  firstMessages: ['긴토키', '뭐해'],
+  firstMessages: ['긴토키', '자는가?'],
   jumpLabel: '3분 뒤',
   draft: '보고 싶네',        // typed, then hesitated over
   sent: '보고 싶',           // what is left when it is sent by mistake
@@ -483,7 +483,7 @@ async function hesitate(total) {
     go(sendBtn, dx, dy, ms);
   }
   await waitUntil(t0 + 6200);
-  go(keys['⌫'], 0, 0, 500);
+  go(sendBtn, 0, 0, 500);
   await waitUntil(t0 + total);
 }
 
@@ -578,15 +578,7 @@ async function run() {
     const ks = await typeText(CONFIG.draft, 270, true);
     await hesitate(CONFIG.hesitateMs);
 
-    for (let i = ks.length - 2; i >= 0; i--) {
-      press('⌫'); sfx.del();
-      setTyped(ks[i].text);
-      await wait(jit(190));
-      if (ks[i].text === CONFIG.sent) break;
-    }
-    setTyped(CONFIG.sent);
-    await wait(650);
-    await sendMsg(CONFIG.sent, CONFIG.time2);
+    await sendMsg(CONFIG.draft, CONFIG.time2);
 
     await wait(CONFIG.ringDelayMs);
     startRing();
